@@ -5,8 +5,8 @@ set -e
 
 if [ "$(uname)" == "Linux" ]; then
     # TODO: Actually make this work...
-    export LIBFFI_CFLAGS="-I$(PREFIX)/include"
-    export LIBFFI_LIBS="-L$(PREFIX)/lib -lffi"
+    export LIBFFI_CFLAGS="-I$PREFIX/include"
+    export LIBFFI_LIBS="-L$PREFIX/lib -lffi"
     #export LD_LIBRARY_PATH="${PREFIX}/lib/:$LD_LIBRARY_PATH"
     export PATH=$PREFIX/bin:$PATH
 fi
@@ -20,8 +20,9 @@ if [ "$(uname)" == "Darwin" ]; then
     export PKG_CONFIG_PATH=/usr/local/Cellar/libffi/3.0.13/lib/pkgconfig/
     export PATH=$PREFIX/bin:$PATH
 fi
-
-
+echo $PREFIX
+echo $LIBFFI_CFLAGS
+echo $LIBFFI_LIBS
 ./configure --prefix=$PREFIX # || { cat config.log ; exit 1 ; }
 make -j2
 make install
