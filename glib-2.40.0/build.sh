@@ -1,8 +1,15 @@
 #! /bin/bash
 
 # ref: https://binstar.org/pkgw/glib
-
 set -e
+
+if [ "$(uname)" == "Linux" ]; then
+    # TODO: Actually make this work...
+    export LIBFFI_CFLAGS="-I$(PREFIX)/include"
+    export LIBFFI_LIBS="-L$(PREFIX)/lib -lffi"
+    #export LD_LIBRARY_PATH="${PREFIX}/lib/:$LD_LIBRARY_PATH"
+    export PATH=$PREFIX/bin:$PATH
+fi
 
 if [ "$(uname)" == "Darwin" ]; then
     # TODO
@@ -14,10 +21,12 @@ if [ "$(uname)" == "Darwin" ]; then
     export PATH=$PREFIX/bin:$PATH
 fi
 
-./configure --prefix=$PREFIX || { cat config.log ; exit 1 ; }
-make -j4
+
+./configure --prefix=$PREFIX # || { cat config.log ; exit 1 ; }
+make -j2
 make install
 
 cd $PREFIX
 rm -rf share/bash-completion share/gdb share/gtk-doc share/systemtap
 
+set +e
