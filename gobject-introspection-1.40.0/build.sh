@@ -1,7 +1,17 @@
 #! /bin/bash
 
 # ref: https://binstar.org/pkgw/gobject-introspection
-set -e
+set -e # exit script if exit 1 is ever encountered
+
+if [ "$(uname)" == "Linux" ]; then
+    # TODO: Actually make this work...
+    export FFI_CFLAGS=$PREFIX/include
+    export FFI_LIBS=$PREFIX/lib
+ #   export LIBFFI_CFLAGS="-I$PREFIX/include"
+ #   export LIBFFI_LIBS="-L$PREFIX/lib -lffi"
+#A    export LD_LIBRARY_PATH="${PREFIX}/lib:$LD_LIBRARY_PATH"
+    export PATH=$PREFIX/bin:$PATH
+fi
 
 if [ "$(uname)" == "Darwin" ]; then
     # TODO
@@ -13,7 +23,16 @@ if [ "$(uname)" == "Darwin" ]; then
     export PATH=$PREFIX/bin:$PATH
 fi
 
-./configure --prefix=$PREFIX || { cat config.log ; exit 1 ; }
-make
+echo prefix $PREFIX
+echo libffi-cflags $LIBFFI_CFLAGS
+echo libffi-libs $LIBFFI_LIBS
+#exit 1
+
+./configure --prefix=$PREFIX # || { cat config.log ; exit 1 ; }
+echo $PREFIX
+echo $LIBFFI_CFLAGS
+echo $LIBFFI_LIBS
+make -j2
 make install
 
+set +e
